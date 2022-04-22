@@ -8,7 +8,7 @@ New York City is a financial powerhouse, multicultural hub, and tourist hotspot,
 
 By utilizing multiple machine learning models as a predictive measure, I offer a set of recommendations tailored to the airbnb hosts' needs. I analyze which indicators can predict the price per night of a listing and find which type of homes hosts ought to invest in. Through thorough data analysis, I discovered that our stakeholders ought to prioritize privacy, credibility, and flexibility to ensure a higher range in price. I recommend that Airbnb hosts seek out Entire Homes, Apartments, or Private rooms as opposed to shared rooms, since privacy plays a huge role in influencing price. Furthermore, number of reviews and high review scores influence price, meaning that users are seeking for credible and low risk places that have already been verified by others. Hosts ought to ensure that their listings have multiple high ratings reviews. Lastly, flexible policies that allow users to have more availability and shorter minimum nights can influence price as well.
 
-![Airbnb-NYC-law.jpg](attachment:Airbnb-NYC-law.jpg)
+![alt text](photos/airbnbnyc.jpg)
 
 # Data Understanding
 
@@ -27,71 +27,66 @@ Folium
 
 Starting data preparation, I first removed the irrelevant features, since 74 features were far too extensive. I then converted the price per night from string to float, separated the listings into two price ranges as categorical variables, and removed outliers that are 3 standard deviations away.
 
-For data visualization, I created a map of New York City that displays all listings with yellow circles representing higher priced listings and green circles representing lower priced listings.
 
 ### Feature Engineering:
 
 By using one hot encoding, I binned neighborhood_group_cleansed and type of room into dummies to observe if location and room type had an influence on price. For room type, the dummies consisted of Entire home/apt, Hotel room, Private room, and Shared Room. For neighborhoods, the dummies consisted of Manhattan, Queens, Brooklyn, Bronx, and Staten Island.
 
+### Price
+![pricehistogram](photos/pricehistogram.png)
 
 ### Map
 
-For data visualization, I extracted the `latitude`,`longitude`,and `price` into a separate dataframe, and then used folium to map out listings.
+For data visualization, I extracted the `latitude`,`longitude`,and `price` into a separate dataframe, and then used folium to map out listings. This map of New York City displays all listings with yellow circles representing higher priced listings (above or equal to $110 per night) and green circles representing lower priced listings (lower than $110 per night).
 
+![alt text](photos/mapofnyc.png)
 
 
 ### Words Associated with High Prices
 
 By using the wordcloud technique on `description`, I explored which specific words often used to describe listings with high prices.
 
-
-# visualize distribution of price (target variable)
-
-
+![alt text](photos/wordsprice.png)
 
 ### Neighborhood
 
 Since location, specifically neighborhoods, may have a strong influence over the price per night of listings, I first visualized the distribution of listings by neighborhood
 
-df.neighbourhood_group_cleansed.value_counts()
+![neighbrohood](photos/neighborhood.png)
 
-df2
 
-df.neighbourhood_cleansed.value_counts()
+# Final Model: Logistic Regression
+I experiment with a total of four models: logistic regression, decision tree, random forest, and k-NN models. Out of all models, the logistic regression model yielded the most accurate results.
 
-df.describe()
+As the main evaluation metrics, I use accuracy and ROC-AUC. Accuracy is an evaluation metric that allows you to measure the total number of predictions a model gets correct, meaning it looks at True Positives and True Negatives. This can give us a general understanding of our model.
 
-plt.figure(figsize=(8, 4))
-df.neighbourhood_group_cleansed.value_counts().plot(kind='bar', color='b')
-plt.xticks(rotation=90)
-plt.ylabel('count')
-plt.xlabel('neighborhood')
-plt.show()
+ROC AUC can reveal how much the model is capable of distinguishing between classes via the False Positive Rate and the True Positive Rate. One whose predictions are 100% correct has an AUC of 1.0.
 
-df.neighbourhood_cleansed.value_counts()
+### Confusion Matrix
+![Confusion Matrix of Final Model](photos/confusionmatrix.png)
 
-# Final Model
+True Positives: 7668
+True Negatives: 7117
+False Positives: 1716
+False Negatives 1451
+
+![Violin Plot of Final Model](photos/cvresults.png)
+
 ## Evaluation Metrics
-![Confusion Matrix of Final Model](photos/evalmetrics_finalmodel.png)
+![Confusion Matrix of Final Model](photos/confusionmatrix.png)
 
-Mean accuracy of the final model: 0.773489765351972
+Mean accuracy of the final model: 0.8236970947951743
 
-Precision Score of the final model: 0.7716570413149711
+AUC of the ROC Curve of the final model: 0.90
 
-AUC of the ROC Curve of the final model: 0.85
-
-![ROC-AUC of Final Model](photos/ROCAUC_finalmodel.png)
-
-### Model Evaluation
-
-
-### Logistic Regression Model
-
+![ROC-AUC of Final Model](photos/auccurve.png)
 
 
 # Best Feature
 
 What are the most important features for predicting the price range of a listing? I utilized the ExtraTreesClassifier method. This class implements a meta estimator that fits a number of randomized decision trees (a.k.a. extra-trees) on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.
+
+![alt text](photos/topfeatures.png)
 
 
 # Conclusion
